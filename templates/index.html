@@ -1,15 +1,28 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Sample Conference App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
         <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
     </head>
     <body>
-        <h1>Welcome to the sample conference app</h1>
-        <label>Enter phone number(s) to connect to the conference</label>
-        <div>
-            <input type="text" name="phone" id="phone" />
+        <div class="container">
+            <div class="jumbotron">
+                <h1>Welcome to plivo conference</h1>
+            </div>
+            <form action="#" href="#">
+                <div class="form-group">
+                    <label for="phone">Enter phone number</label>
+                    <input class="form-control" type="text" name="phone" id="phone" placeholder="Phone number with country code" />
+                </div>
+                <button class="btn btn-primary" type="button" onclick="createConference()">Start Conference</button>
+            </form>
+            <p role="alert" id="message"></p>
         </div>
-        <button onclick="createConference()">Start Conference</button>
         <script>
             var createConference = function() {
                 var phoneNumber = $('#phone').val();
@@ -17,7 +30,11 @@
                     url: '/create_conference?phone=' + phoneNumber,
                     method: 'GET',
                     success: function() {
-                        alert('conference has been initiated!');
+                        $('#message').text('conference has been initiated!')
+                            .attr('class', 'alert alert-success');
+                    },
+                    error: function() {
+                        $('#message').text('Something went wrong. Please try again').attr('class', 'alert alert-danger');
                     }
                 })
             }
