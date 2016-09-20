@@ -10,23 +10,27 @@ app = Flask(__name__)
 @app.route('/response/conference/', methods=['GET', 'POST'])
 def conference():
     response = plivoxml.Response()
-    response.addSpeak('Hold on for a second')
-    dial = response.addDial()
-    params = {
-        'sendDigits': 'W' * 10 + request.values['meeting_id'] + '#' + 'W' * 8 + '#'
+    wait_params = {
+        'length': 10
     }
-    dial.addNumber(config['Zoom']['number'], **params)
+    response.addWait(**wait_params)
+    params = {
+        'callerId': config['Plivo']['number']
+    }
+    dial = response.addDial(**params)
+    dial.addNumber(request.values['phone'])
     return Response(str(response), mimetype='text/xml')
 
 
 @app.route('/create_conference', methods=['GET'])
 def create_conference():
-    answer_url = config['App']['url'] + '/response/conference/?meeting_id=' + request.values['meeting_id']
+    answer_url = config['App']['url'] + '/response/conference/?phone=' + request.values['phone']
     call_params = {
-        'to': request.values['phone'],
-        'from': config['Plivo']['number'],
+        'to': config['Zoom']['number'],
+        'from': request.values['phone'],
         'answer_url': answer_url,
-        'answer_method': 'GET'
+        'answer_method': 'GET',
+        'send_digits': 'W' * 10 + request.values['meeting_id'] + '#' + 'W' * 8 + '#'
     }
     plivoApi.make_call(call_params)
     response = make_response('Conference created!')
@@ -43,6 +47,7 @@ def done_conference():
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
+
 
 if __name__ == '__main__':
     auth_id = config['Plivo']['auth_id']
