@@ -19,6 +19,10 @@
                     <label for="phone">Enter phone number</label>
                     <input class="form-control" type="text" name="phone" id="phone" placeholder="Phone number with country code" />
                 </div>
+                <div class="form-group">
+                    <label for="meeting-id">Enter meeting id</label>
+                    <input class="form-control" type="text" name="meeting-id" id="meeting-id" placeholder="Meeting Id" />
+                </div>
                 <button class="btn btn-primary" type="button" onclick="createConference()">Start Conference</button>
             </form>
             <p role="alert" id="message"></p>
@@ -26,8 +30,9 @@
         <script>
             var createConference = function() {
                 var phoneNumber = $('#phone').val();
+                var meetingId = $('#meeting-id').val();
                 $.ajax({
-                    url: '/create_conference?phone=' + phoneNumber,
+                    url: '/create_conference?phone=' + phoneNumber + '&meeting_id=' + meetingId,
                     method: 'GET',
                     success: function() {
                         $('#message').text('conference has been initiated!')
@@ -37,7 +42,7 @@
                         $('#message').text('Something went wrong. Please try again').attr('class', 'alert alert-danger');
                     }
                 })
-            }
+            };
         </script>
     </body>
 </html>
