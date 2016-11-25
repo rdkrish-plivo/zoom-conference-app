@@ -1,0 +1,2 @@
+cd /zoom-conference-app/
+python conference.py
